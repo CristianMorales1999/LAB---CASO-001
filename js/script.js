@@ -1,69 +1,71 @@
-(function(){
-    const listElements = document.querySelectorAll('.menu__item--show');
+(function () {
+    const listElements = document.querySelectorAll('.menu__item');
     const list = document.querySelector('.menu__links');
     const menu = document.querySelector('.menu__hamburguer');
 
-    const addClick = () => {
+    const toggleSubmenu = (element) => {
+        const subMenu = element.querySelector('.menu__nesting');
+        const arrow = element.querySelector('.menu__arrow');
+        
+        // Alterna la clase activa
+        const isActive = element.classList.toggle('menu__item--active');
+        
+        // Ajusta la altura del submenu
+        if (subMenu) {
+            subMenu.style.height = isActive ? `${subMenu.scrollHeight}px` : '0';
+        }
+
+        // Ajusta la orientación de la flecha
+        if (arrow) {
+            arrow.style.transform = isActive ? 'rotate(0deg)' : 'rotate(-90deg)';
+        }
+    };
+
+    const closeAllSubmenus = () => {
         listElements.forEach(element => {
-            element.addEventListener('click', () => {
+            const subMenu = element.querySelector('.menu__nesting');
+            const arrow = element.querySelector('.menu__arrow');
+
+            // Resetea cada submenu
+            if (subMenu) {
+                subMenu.style.height = '0';
+            }
+
+            // Resetea cada flecha
+            if (arrow) {
+                arrow.style.transform = 'rotate(-90deg)';
+            }
+
+            // Remueve la clase activa
+            element.classList.remove('menu__item--active');
+        });
+    };
+
+    const handleResize = () => {
+        if (window.innerWidth > 800) {
+            closeAllSubmenus();
+            if (list.classList.contains('menu__links--show')) {
+                list.classList.remove('menu__links--show');
+            }
+        }
+    };
+
+    const addClickEvents = () => {
+        listElements.forEach(element => {
+            element.addEventListener('click', (event) => {
+                event.stopPropagation();
+
                 // Cierra otros submenús antes de abrir el actual
-                listElements.forEach(el => {
-                    if (el !== element) {
-                        const subMenu = el.children[1];
-                        const arrow = el.querySelector('.menu__arrow');
-                        
-                        if (subMenu.clientHeight > 0) {
-                            subMenu.style.height = '0';
-                            el.classList.remove('menu__item--active');
-                            if (arrow) arrow.style.transform = 'rotate(-90deg)';
-                        }
-                    }
-                });
-
-                // Abre o cierra el menú actual
-                let subMenu = element.children[1];
-                let arrow = element.querySelector('.menu__arrow');
-                let height = 0;
-                
-                element.classList.toggle('menu__item--active');
-                
-                if (subMenu.clientHeight === 0) {
-                    height = subMenu.scrollHeight;
-                    if (arrow) arrow.style.transform = 'rotate(0deg)';
-                } else {
-                    if (arrow) arrow.style.transform = 'rotate(-90deg)';
-                }
-
-                subMenu.style.height = `${height}px`;
+                closeAllSubmenus();
+                toggleSubmenu(element);
             });
         });
-    }
+    };
 
-    const deleteStyleHeight = () => {
-        listElements.forEach(element => {
-            if (element.children[1].getAttribute('style')) {
-                element.children[1].removeAttribute('style');
-                element.classList.remove('menu__item--active');
-                
-                const arrow = element.querySelector('.menu__arrow');
-                if (arrow) arrow.style.transform = 'rotate(-90deg)';
-            }
-        });
-    }
+    // Inicialización de eventos
+    window.addEventListener('resize', handleResize);
+    addClickEvents();
 
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 800) {
-            deleteStyleHeight();
-            if (list.classList.contains('menu__links--show'))
-                list.classList.remove('menu__links--show');
-        } else {
-            addClick();
-        }
-    });
-
-    if (window.innerWidth <= 800) {
-        addClick();
-    }
-
+    // Manejo del botón hamburguesa
     menu.addEventListener('click', () => list.classList.toggle('menu__links--show'));
 })();

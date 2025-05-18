@@ -40,6 +40,10 @@ body{
     --clip: polygon(0 0, 100% 0, 100% 0, 0 0);
     --transform: rotate(0deg);
 }
+/* Flecha hacia abajo para items activos */
+.menu__item--active .menu__arrow {
+    transform: rotate(0deg);
+}
 
 .menu__item:hover{
     --clip: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
@@ -62,9 +66,8 @@ body{
 
 
 .menu__arrow{
-    transform: var(--transform);
+    transform: rotate(-90deg);
     transition: transform .3s;
-    display: block;
     margin-left: 3px;
 }
 
@@ -119,8 +122,8 @@ body{
     .menu__item--active{
         --background: #5e7094;
     }
-    .menu__item--active .menu__arrow{
-        --transform: rotate(0deg) !important;
+    .menu__item--active .menu__arrow {
+        transform: rotate(0deg);
     }
 
     .menu__item--show{
@@ -132,7 +135,6 @@ body{
     }
 
     .menu__arrow {
-        transition: transform .3s;
         margin-left: auto;
         margin-right: 20px;
     }
@@ -176,7 +178,12 @@ body{
         width: 100%;
         transform: translateY(0);
         height: 0;
+        overflow: hidden;
         transition: height .3s;
+    }
+
+    .menu__item--active .menu__arrow {
+        transform: rotate(0deg);
     }
 
     .menu__link--inside{
