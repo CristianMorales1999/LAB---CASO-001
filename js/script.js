@@ -29,9 +29,12 @@
     }
 
     // Guarda el estado del menú principal seleccionado
-    activeParent = element.classList.contains('menu__item--active')
-      ? element
-      : null
+    if (!isActive) {
+      activeParent = element
+      markActiveParent()
+    } else {
+      activeParent = null
+    }
   }
 
   const closeAllSubmenus = () => {
@@ -41,6 +44,28 @@
       if (subMenu) subMenu.style.height = '0'
       if (arrow) arrow.style.transform = 'rotate(-90deg)'
       element.classList.remove('menu__item--active')
+    })
+  }
+
+  const markActiveParent = () => {
+    listElements.forEach(element => {
+      const link = element.querySelector('.menu__link')
+      if (element === activeParent) {
+        link.style.backgroundColor = "#4A5568" // Fondo gris
+      } else {
+        link.style.backgroundColor = ""
+      }
+    })
+  }
+
+  const markActiveChild = () => {
+    const allSubItems = document.querySelectorAll('.menu__link--inside')
+    allSubItems.forEach(subItem => {
+      if (subItem === activeChild) {
+        subItem.style.backgroundColor = "#718096" // Fondo más claro
+      } else {
+        subItem.style.backgroundColor = ""
+      }
     })
   }
 
@@ -56,6 +81,9 @@
         const arrow = activeParent.querySelector('.menu__arrow')
         if (arrow) arrow.style.transform = 'rotate(0deg)'
       }
+      // Mantén el fondo del menú principal activo
+      markActiveParent()
+      markActiveChild()
     }
   }
 
@@ -81,7 +109,11 @@
           activeParent = element
           activeChild = subItem
 
-          //mostrar el contenido del item seleccionado y el subitem
+          // Marca los elementos seleccionados
+          markActiveParent()
+          markActiveChild()
+
+          // Mostrar el contenido del item seleccionado y el subitem
           console.log({
             'Menú Principal': activeParent
               ? activeParent.childNodes[3].childNodes[0].textContent.trim()
@@ -90,10 +122,6 @@
               ? activeChild.textContent.trim()
               : 'Ninguno'
           })
-
-          // Añade la clase activa al subitem seleccionado
-          subItems.forEach(si => si.classList.remove('menu__link--active'))
-          subItem.classList.add('menu__link--active')
         })
       })
     })
@@ -108,6 +136,7 @@
     list.classList.toggle('menu__links--show')
   )
 })()
+
 
 //_____________________________________________________________________________________
 //__________________________LOGICA DE CARGA DE CONTENIDO AJAX__________________________
