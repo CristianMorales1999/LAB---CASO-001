@@ -7,15 +7,12 @@
         const subMenu = element.querySelector('.menu__nesting');
         const arrow = element.querySelector('.menu__arrow');
         
-        // Alterna la clase activa
         const isActive = element.classList.toggle('menu__item--active');
         
-        // Ajusta la altura del submenu
         if (subMenu) {
             subMenu.style.height = isActive ? `${subMenu.scrollHeight}px` : '0';
         }
 
-        // Ajusta la orientación de la flecha
         if (arrow) {
             arrow.style.transform = isActive ? 'rotate(0deg)' : 'rotate(-90deg)';
         }
@@ -26,17 +23,14 @@
             const subMenu = element.querySelector('.menu__nesting');
             const arrow = element.querySelector('.menu__arrow');
 
-            // Resetea cada submenu
             if (subMenu) {
                 subMenu.style.height = '0';
             }
 
-            // Resetea cada flecha
             if (arrow) {
                 arrow.style.transform = 'rotate(-90deg)';
             }
 
-            // Remueve la clase activa
             element.classList.remove('menu__item--active');
         });
     };
@@ -55,17 +49,19 @@
             element.addEventListener('click', (event) => {
                 event.stopPropagation();
 
-                // Cierra otros submenús antes de abrir el actual
+                const isActive = element.classList.contains('menu__item--active');
+
                 closeAllSubmenus();
-                toggleSubmenu(element);
+
+                if (!isActive) {
+                    toggleSubmenu(element);
+                }
             });
         });
     };
 
-    // Inicialización de eventos
     window.addEventListener('resize', handleResize);
     addClickEvents();
 
-    // Manejo del botón hamburguesa
     menu.addEventListener('click', () => list.classList.toggle('menu__links--show'));
 })();
