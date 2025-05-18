@@ -10,6 +10,7 @@ require_once 'init.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Desplegable</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
 <body>
@@ -35,7 +36,7 @@ require_once 'init.php';
                                 <?php foreach ($opciones as $opcion) { ?>
                                     <!--Item de Submenu-->
                                     <li class="menu__inside">
-                                        <a href="#" class="menu__link menu__link--inside"><?php echo $opcion ?></a>
+                                        <a href="#" class="menu__link menu__link--inside" onclick="cargarURL('view.php','container');"><?php echo $opcion ?></a>
                                     </li>
                                 <?php } ?>
                             </ul>
@@ -49,6 +50,22 @@ require_once 'init.php';
             </div>
         </section>
     </nav>
+
+    <!--Contenedor de la pagina-->
+    <section class="container">
+        <div id="container">
+            <!--Contenido cargado por AJAX-->
+            <h1>Bienvenido a la página principal</h1>
+            <p>Selecciona una opción del menú para cargar contenido aquí.</p>
+        </div>
+    </section>
+    
+    <!-- Loader -->
+    <div id="loader" class="loader-overlay">
+        <div class="spinner"></div>
+    </div>
+
+
     <script src="js/script.js"></script>
 </body>
 

@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
 
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     font-family: 'Poppins', sans-serif;
 }
 
-.menu{
+.menu {
     background-color: #1A202C;
     color: #fff;
     height: 70px;
 }
 
-.menu__container{
+.menu__container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -27,31 +27,32 @@ body{
     margin: 0 auto;
 }
 
-.menu__links{
+.menu__links {
     height: 100%;
     transition: transform .5s;
     display: flex;
 }
 
-.menu__item{
+.menu__item {
     list-style: none;
     position: relative;
     height: 100%;
     --clip: polygon(0 0, 100% 0, 100% 0, 0 0);
     --transform: rotate(0deg);
 }
+
 /* Flecha hacia abajo para items activos */
 .menu__item--active .menu__arrow {
     transform: rotate(0deg);
 }
 
-.menu__item:hover{
+.menu__item:hover {
     --clip: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
     /*Quiero hacer el transform rotate solo si tiene un max-with>800px*/
     --transform: rotate(-180deg);
 }
 
-.menu__link{
+.menu__link {
     color: #fff;
     text-decoration: none;
     padding: 0 30px;
@@ -60,20 +61,20 @@ body{
     align-items: center;
 }
 
-.menu__link:hover{
+.menu__link:hover {
     background-color: #5e7094;
 }
 
 
-.menu__arrow{
+.menu__arrow {
     transform: rotate(-90deg);
     transition: transform .3s;
     margin-left: 3px;
 }
 
-.menu__nesting{
+.menu__nesting {
     list-style: none;
-    transition:clip-path .3s;
+    transition: clip-path .3s;
     clip-path: var(--clip);
     position: absolute;
     right: 0;
@@ -83,15 +84,15 @@ body{
     background-color: #000;
 }
 
-.menu__link--inside{
+.menu__link--inside {
     padding: 30px 100px 30px 20px;
 }
 
-.menu__link--inside:hover{
+.menu__link--inside:hover {
     background-color: #798499;
 }
 
-.menu__hamburguer{
+.menu__hamburguer {
     height: 100%;
     display: flex;
     align-items: center;
@@ -100,37 +101,40 @@ body{
     display: none;
 }
 
-.menu__img{
+.menu__img {
     display: block;
     width: 36px;
 }
 
-@media (max-width:800px){
-    .menu__hamburguer{
+@media (max-width:800px) {
+    .menu__hamburguer {
         display: flex;
     }
 
-    .menu__item{
-        --clip:0;
-        overflow:hidden ;
+    .menu__item {
+        --clip: 0;
+        overflow: hidden;
     }
 
-    .menu__item:hover{
+    .menu__item:hover {
         --clip: 0;
         --transform: rotate(-90deg);
     }
-    .menu__item--active{
+
+    .menu__item--active {
         --background: #5e7094;
     }
+
     .menu__item--active .menu__arrow {
         transform: rotate(0deg);
     }
 
-    .menu__item--show{
-         --transform: rotate(-90deg);
+    .menu__item--show {
+        --transform: rotate(-90deg);
         background-color: var(--background);
     }
-    .menu__item--show .menu__arrow{
+
+    .menu__item--show .menu__arrow {
         --transform: rotate(-90deg);
     }
 
@@ -139,7 +143,7 @@ body{
         margin-right: 20px;
     }
 
-    .menu__links{
+    .menu__links {
         position: fixed;
         max-width: 400px;
         width: 100%;
@@ -150,29 +154,31 @@ body{
         overflow-y: auto;
         display: grid;
         grid-auto-rows: max-content;
-        max-height: calc(100vh - 70px); /* Asegura que el menú no se desborde */
+        max-height: calc(100vh - 70px);
+        /* Asegura que el menú no se desborde */
         transform: translateX(100%);
     }
 
-    .menu__links--show{
+    .menu__links--show {
         transform: unset;
         width: 100%;
         overflow-y: auto;
-        max-height: calc(100vh - 70px); /* Asegura que el menú no se desborde */
+        max-height: calc(100vh - 70px);
+        /* Asegura que el menú no se desborde */
     }
 
-    .menu__link{
+    .menu__link {
         padding: 25px 0;
         padding-left: 30px;
         height: auto;
     }
 
-    .menu__arrow{
+    .menu__arrow {
         margin-left: auto;
         margin-right: 20px;
     }
 
-    .menu__nesting{
+    .menu__nesting {
         display: grid;
         position: unset;
         width: 100%;
@@ -186,9 +192,43 @@ body{
         transform: rotate(0deg);
     }
 
-    .menu__link--inside{
+    .menu__link--inside {
         width: 90%;
         margin-left: auto;
         border-left: 1px solid #798499;
+    }
+}
+
+/*
+_____________________________________________________
+_____________________________________________________
+
+*/
+/* Estilo para el efecto de carga */
+.loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ffcccc;
+    border-top: 6px solid #cc0000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
     }
 }
