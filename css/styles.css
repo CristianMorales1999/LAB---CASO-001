@@ -119,12 +119,23 @@ body{
     .menu__item--active{
         --background: #5e7094;
     }
+    .menu__item--active .menu__arrow{
+        --transform: rotate(0deg) !important;
+    }
 
     .menu__item--show{
          --transform: rotate(-90deg);
         background-color: var(--background);
     }
+    .menu__item--show .menu__arrow{
+        --transform: rotate(-90deg);
+    }
 
+    .menu__arrow {
+        transition: transform .3s;
+        margin-left: auto;
+        margin-right: 20px;
+    }
 
     .menu__links{
         position: fixed;
