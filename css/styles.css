@@ -148,12 +148,15 @@ body{
         overflow-y: auto;
         display: grid;
         grid-auto-rows: max-content;
+        max-height: calc(100vh - 70px); /* Asegura que el menú no se desborde */
         transform: translateX(100%);
     }
 
     .menu__links--show{
         transform: unset;
         width: 100%;
+        overflow-y: auto;
+        max-height: calc(100vh - 70px); /* Asegura que el menú no se desborde */
     }
 
     .menu__link{
