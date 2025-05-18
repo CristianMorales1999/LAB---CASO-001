@@ -6,6 +6,21 @@
     const addClick = () => {
         listElements.forEach(element => {
             element.addEventListener('click', () => {
+                // Cierra otros submenús antes de abrir el actual
+                listElements.forEach(el => {
+                    if (el !== element) {
+                        const subMenu = el.children[1];
+                        const arrow = el.querySelector('.menu__arrow');
+                        
+                        if (subMenu.clientHeight > 0) {
+                            subMenu.style.height = '0';
+                            el.classList.remove('menu__item--active');
+                            if (arrow) arrow.style.transform = 'rotate(-90deg)';
+                        }
+                    }
+                });
+
+                // Abre o cierra el menú actual
                 let subMenu = element.children[1];
                 let arrow = element.querySelector('.menu__arrow');
                 let height = 0;
@@ -14,11 +29,9 @@
                 
                 if (subMenu.clientHeight === 0) {
                     height = subMenu.scrollHeight;
-                    // Ajusta la flecha cuando el submenu está abierto
-                    arrow.style.transform = 'rotate(0deg)';
+                    if (arrow) arrow.style.transform = 'rotate(0deg)';
                 } else {
-                    // Vuelve la flecha a la posición inicial (derecha)
-                    arrow.style.transform = 'rotate(-90deg)';
+                    if (arrow) arrow.style.transform = 'rotate(-90deg)';
                 }
 
                 subMenu.style.height = `${height}px`;
@@ -32,11 +45,8 @@
                 element.children[1].removeAttribute('style');
                 element.classList.remove('menu__item--active');
                 
-                // Restablece la rotación de las flechas
                 const arrow = element.querySelector('.menu__arrow');
-                if (arrow) {
-                    arrow.style.transform = 'rotate(-90deg)';
-                }
+                if (arrow) arrow.style.transform = 'rotate(-90deg)';
             }
         });
     }
