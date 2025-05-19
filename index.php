@@ -17,8 +17,13 @@ require_once 'init.php';
     <nav class="menu">
         <!--Contenedor de Mneu-->
         <section class="menu__container">
+
             <!--Logo-->
-            <h1 class="menu__logo">Cristian M.</h1>
+            <div class="menu__logo-container">
+                <a href="/" title="Ir a la página principal">
+                    <img src="assets/logo.png" alt="Logo" class="menu__logo-img">
+                </a>
+            </div>
             <!--Links del menu-->
             <ul class="menu__links">
                 <?php foreach ($menu as $seccion => $opciones) { ?>
@@ -59,7 +64,7 @@ require_once 'init.php';
             <p>Selecciona una opción del menú para cargar contenido aquí.</p>
         </div>
     </section>
-    
+
     <!-- Loader -->
     <div id="loader" class="loader-overlay">
         <div class="spinner"></div>
