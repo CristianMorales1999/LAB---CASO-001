@@ -41,7 +41,7 @@ require_once 'init.php';
                                 <?php foreach ($opciones as $opcion) { ?>
                                     <!--Item de Submenu-->
                                     <li class="menu__inside">
-                                        <a href="#" class="menu__link menu__link--inside" onclick="cargarURL('view.php','container');"><?php echo $opcion ?></a>
+                                        <a href="#" class="menu__link menu__link--inside"><?php echo $opcion ?></a>
                                     </li>
                                 <?php } ?>
                             </ul>

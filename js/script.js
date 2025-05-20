@@ -113,15 +113,32 @@
           markActiveParent()
           markActiveChild()
 
-          // Mostrar el contenido del item seleccionado y el subitem
+          // Obtener textos para construir la URL dinámica
+          const menuText = activeParent
+            ? activeParent
+                .querySelector('.menu__link')
+                .textContent.trim()
+                .toLowerCase()
+                .replace(/ /g, '_')
+            : ''
+          const submenuText = activeChild
+            ? activeChild.textContent.trim().toLowerCase().replace(/ /g, '_')
+            : ''
+
+          // Construye la URL
+          const url = `views/${menuText}/${submenuText}.php`
+
+          // Cargar el contenido usando la URL dinámica
+          cargarURL(url, 'container')
+
+          // Mostrar en consola para verificar
           console.log({
-            'Menú Principal': activeParent
-              ? activeParent.childNodes[3].childNodes[0].textContent.trim()
-              : 'Ninguno',
-            'Submenú Seleccionado': activeChild
-              ? activeChild.textContent.trim()
-              : 'Ninguno'
+            'Menú Principal': menuText || 'Ninguno',
+            'Submenú Seleccionado': submenuText || 'Ninguno',
+            URL: url
           })
+
+
         })
       })
     })

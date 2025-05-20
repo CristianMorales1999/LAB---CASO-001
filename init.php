@@ -20,4 +20,12 @@ $menu['Consultas'] = $consultas;
 
 // // Verificando el resultado
 // print_r($menu);
+
+
+$flagFile = 'rutas_creadas.txt';
+
+// Si ya se ejecutó antes, no hacer nada
+if (!file_exists($flagFile)) {
+    require_once 'creacion_rutas.php';
+}
 ?>
