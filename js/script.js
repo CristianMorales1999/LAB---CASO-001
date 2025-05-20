@@ -130,15 +130,6 @@
 
           // Cargar el contenido usando la URL dinámica
           cargarURL(url, 'container')
-
-          // Mostrar en consola para verificar
-          console.log({
-            'Menú Principal': menuText || 'Ninguno',
-            'Submenú Seleccionado': submenuText || 'Ninguno',
-            URL: url
-          })
-
-
         })
       })
     })
