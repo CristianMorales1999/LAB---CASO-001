@@ -10,6 +10,7 @@ require_once 'init.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Desplegable</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/general.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
@@ -69,8 +70,8 @@ require_once 'init.php';
     <div id="loader" class="loader-overlay">
         <div class="spinner"></div>
     </div>
-
-
+    
+    <script src="js/functions.js"></script>
     <script src="js/script.js"></script>
 </body>
 

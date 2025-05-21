@@ -1,0 +1,148 @@
+
+  .container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff0f0;
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  h2 {
+    color: #b30000;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form label {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #800000;
+  }
+
+  .form input, .form select, .form textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .form-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .btn {
+    background-color: #ff4d4d;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .btn:hover {
+    background-color: #e60000;
+  }
+
+  .btn.cancel {
+    background-color: #999;
+  }
+
+  .btn.cancel:hover {
+    background-color: #555;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+  }
+
+  table th, table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+  }
+
+  table thead {
+    background-color: #cc0000;
+    color: white;
+  }
+
+  .btn.delete {
+    background-color: #cc0000; /* Rojo elegante */
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 14px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn.delete:hover {
+    background-color: #a30000; /* Más oscuro al pasar mouse */
+    transform: scale(1.05);
+  }
+  
+
+  /* Estilo para el efecto de carga */
+  .loader-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ffcccc;
+    border-top: 6px solid #cc0000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .success {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #c3e6cb;
+    font-size: 16px;
+  }
+
+  .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb;
+    font-size: 16px;
+  }

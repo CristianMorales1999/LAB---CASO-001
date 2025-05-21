@@ -1,8 +1,8 @@
 <?php
   // Incluir el archivo de conexión a la base de datos 
-  require_once '../../BD/obtenerRegistrosDeUnaTabla.php';
+  require_once '../BD/obtenerRegistrosDeUnaTabla.php';
 
-  $tabla = $GET['tabla'] ?? 'Sin Nombre'; // Obtener el nombre de la tabla desde la URL o usar 'empleados' por defecto
+  $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL o usar 'empleados' por defecto
   //Llamar la función para obtener todos los registros de la tabla Empleados
   $resultado = obtenerTodosLosRegistrosDeUnaTabla($tabla);
 ?>
@@ -17,8 +17,13 @@
             $columnas = array_keys($resultado[0]);
             // Recorrer los nombres de las columnas y mostrarlas en la tabla
             foreach ($columnas as $columna) {
+                $columna = str_replace('_', ' ', $columna);
+                $columna = preg_replace('/(?<!^)(?=[A-Z])/', ' ', $columna);
+                $columna = preg_replace('/\s+/', ' ', $columna);
+                $columna = trim($columna);
+                $columna = ucfirst(strtolower($columna));
                 // Mostrar el nombre de la columna
-                echo "<th>" . ucfirst(strtolower($columna)) . "</th>";
+                echo "<th>" . $columna . "</th>";
             }
         ?>
       </tr>

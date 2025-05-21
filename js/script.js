@@ -126,10 +126,13 @@
             : ''
 
           // Construye la URL
-          const url = `views/${menuText}/${submenuText}.php`
-
+        //   const url = `views/${menuText}/${submenuText}.php`
+        const url = `views/${submenuText}.php`
+        
           // Cargar el contenido usando la URL dinámica
-          cargarURL(url, 'container')
+          cargarURL(url, 'container',true,{
+            tabla: menuText,
+          })
         })
       })
     })
@@ -144,34 +147,3 @@
     list.classList.toggle('menu__links--show')
   )
 })()
-
-
-//_____________________________________________________________________________________
-//__________________________LOGICA DE CARGA DE CONTENIDO AJAX__________________________
-//_____________________________________________________________________________________
-
-function cargarURL (url, contenedor, efectoDeCarga = true) {
-  // Esperar n minilisegundos antes de mostrar el loader
-  if (efectoDeCarga) {
-    mostrarLoader(300)
-  }
-
-  // Realizar la petición AJAX
-  $.get(url, {}, function (data) {
-    $(`#${contenedor}`).html(data)
-  }).fail(function () {
-    $(`#${contenedor}`).html(`
-        <div class="error">
-          <h2>Error al cargar el contenido</h2>
-        </div>
-      `)
-  })
-}
-
-function mostrarLoader (milisegundos = 1000) {
-  document.getElementById('loader').style.display = 'flex'
-  setTimeout(
-    () => (document.getElementById('loader').style.display = 'none'),
-    milisegundos
-  )
-}
