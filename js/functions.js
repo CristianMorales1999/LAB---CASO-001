@@ -35,11 +35,13 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
     limpiarMensajesDeError();
     
     //Hacer distinción de la tabla(Empleados, Cargos y Profesiones) a la que se va a insertar para saber que campos validar
-    let item;
+    let item = {};
+    let esValido = true;
+
     if(tablaBD=="empleados"){
         item["nombre"] = $("#nombre").val().trim();
-        item["apellidoPaterno"] = $("#apellido-paterno").val().trim();
-        item["apellidoMaterno"] = $("#apellido-materno").val().trim();
+        item["apellidoPaterno"] = $("#apellidoPaterno").val().trim();
+        item["apellidoMaterno"] = $("#apellidoMaterno").val().trim();
         item["idCargo"] = $("#cargo").val();
         item["idProfesion"] = $("#profesion").val();
 
@@ -50,12 +52,12 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
         }
         // Validación del campo apellido paterno
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["apellidoPaterno"])) {
-            mostrarTextoDeError("El apellido paterno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellido-paterno");
+            mostrarTextoDeError("El apellido paterno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellidoPaterno");
             esValido = false;
         }
         // Validación del campo apellido materno
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["apellidoMaterno"])) {
-            mostrarTextoDeError("El apellido materno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellido-materno");
+            mostrarTextoDeError("El apellido materno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellidoMaterno");
             esValido = false;
         }
         if (item['idCargo'] === "" || item['idCargo'] === null) {
@@ -83,7 +85,6 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
             esValido = false;
         }
     }
-    let esValido = true;
 
     // Si todo es válido, se procede con la inserción
     if (esValido) {
