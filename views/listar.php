@@ -2,7 +2,7 @@
   // Incluir el archivo de conexión a la base de datos 
   require_once '../BD/obtenerRegistrosDeUnaTabla.php';
 
-  $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL o usar 'empleados' por defecto
+  $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL
   //Llamar la función para obtener todos los registros de la tabla Empleados
   $resultado = obtenerTodosLosRegistrosDeUnaTabla($tabla);
 ?>

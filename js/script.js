@@ -126,8 +126,8 @@
             : ''
 
           // Construye la URL
-           const url = `views/${menuText}/${submenuText}.php`
-        //const url = `views/${submenuText}.php`
+           //const url = `views/${menuText}/${submenuText}.php`
+        const url = `views/${submenuText}.php`
         
           // Cargar el contenido usando la URL dinámica
           cargarURL(url, 'container',true,{

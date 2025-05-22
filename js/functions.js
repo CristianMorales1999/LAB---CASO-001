@@ -39,38 +39,39 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
     let esValido = true;
 
     if(tablaBD=="empleados"){
-        item["nombre"] = $("#nombre").val().trim();
-        item["apellidoPaterno"] = $("#apellidoPaterno").val().trim();
-        item["apellidoMaterno"] = $("#apellidoMaterno").val().trim();
-        item["idCargo"] = $("#cargo").val();
-        item["idProfesion"] = $("#profesion").val();
+        // Obtener los valores de los campos del formulario en mayúsculas
+        item["nombres"] = $("#nombre").val().trim().toUpperCase();
+        item["apellido_paterno"] = $("#apellidoPaterno").val().trim().toUpperCase();
+        item["apellido_materno"] = $("#apellidoMaterno").val().trim().toUpperCase();
+        item["cargo_id"] = $("#cargo").val();
+        item["profesion_id"] = $("#profesion").val();
 
         // Validación del campo nombre
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["nombre"])) {
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["nombres"])) {
             mostrarTextoDeError("El nombre debe contener solo letras y tener entre 3 y 100 caracteres.", "nombre");
             esValido = false;
         }
         // Validación del campo apellido paterno
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["apellidoPaterno"])) {
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["apellido_paterno"])) {
             mostrarTextoDeError("El apellido paterno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellidoPaterno");
             esValido = false;
         }
         // Validación del campo apellido materno
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["apellidoMaterno"])) {
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["apellido_materno"])) {
             mostrarTextoDeError("El apellido materno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellidoMaterno");
             esValido = false;
         }
-        if (item['idCargo'] === "" || item['idCargo'] === null) {
+        if (item['cargo_id'] === "" || item['cargo_id'] === null) {
             mostrarTextoDeError("Selecciona un cargo.", "cargo");
             esValido = false;
         }
-        if (item['idProfesion'] === "" || item['idProfesion'] === null) {
+        if (item['profesion_id'] === "" || item['profesion_id'] === null) {
             mostrarTextoDeError("Selecciona una profesión.", "profesion");
             esValido = false;
         }
     }
     else if(tablaBD=="cargos"){
-        item['cargo'] = $("#cargo").val();
+        item['cargo'] = $("#cargo").val().toUpperCase();
         // Validación del campo cargo
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item['cargo'])) {
             mostrarTextoDeError("El cargo debe contener solo letras y tener entre 3 y 100 caracteres.", "cargo");
@@ -78,7 +79,7 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
         }
     }
     else if(tablaBD=="profesiones"){
-        item['profesion'] = $("#profesion").val();
+        item['profesion'] = $("#profesion").val().toUpperCase();
         // Validación del campo profesion
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item['profesion'])) {
             mostrarTextoDeError("La profesión debe contener solo letras y tener entre 3 y 100 caracteres.", "profesion");
@@ -89,7 +90,7 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
     // Si todo es válido, se procede con la inserción
     if (esValido) {
       if(accion=="insert"){
-        insertarNuevoItem(tablaBD,item,contenedorOrUrlDeRetorno);//Contenedor
+        insertarNuevoItem(tablaBD,item,contenedorOrUrlDeRetorno);
       }
       else if(accion=="update"){
         actualizarContacto(contenedorOrUrlDeRetorno);//Url de retorno
