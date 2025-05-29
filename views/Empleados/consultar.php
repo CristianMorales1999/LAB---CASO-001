@@ -4,22 +4,23 @@ require_once '../../BD/obtenerRegistrosDeUnaTabla.php';
 
 $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL
 
+$nombreTabla = ucfirst(strtolower($tabla)); // Convertir el nombre de la tabla a mayúsculas y minúsculas
+
 $cargos = obtenerTodosLosRegistrosDeUnaTabla('cargos');
 $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
 ?>
 
 <div id="vista-consultar" class="container">
-    <h2>Consultar Empleados</h2>
+    <h2>Consultar <?= $nombreTabla ?></h2>
     <form class="form">
-
         <div class="form-group">
             <label>Buscar por:</label>
             <select id="columna" name="columna" required>
                 <option value="nombres">Nombre</option>
                 <option value="apellido_paterno">Apellido Paterno</option>
                 <option value="apellido_materno">Apellido Materno</option>
-                <option value="cargo_id">Cargo</option>
-                <option value="profesion_id">Profesión</option>
+                <option value="cargo">Cargo</option>
+                <option value="profesion">Profesión</option>
             </select>
         </div>
 
@@ -32,7 +33,7 @@ $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
                     echo "<option value=\"\" disabled selected>Seleccionar...</option>";
                     // Recorrer los cargos y mostrarlos en el select
                     foreach ($cargos as $cargo) {
-                        echo "<option value=\"{$cargo['id']}\">{$cargo['cargo']}</option>";
+                        echo "<option value=\"{$cargo['cargo']}\">{$cargo['cargo']}</option>";
                     }
                 } else {
                     echo "<option value=\"\" disabled>No hay cargos disponibles</option>";
@@ -48,7 +49,7 @@ $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
                 if ($profesiones) {
                     echo "<option value=\"\" disabled selected>Seleccionar...</option>";
                     foreach ($profesiones as $profesion) {
-                        echo "<option value=\"{$profesion['id']}\">{$profesion['profesion']}</option>";
+                        echo "<option value=\"{$profesion['profesion']}\">{$profesion['profesion']}</option>";
                     }
                 } else {
                     echo "<option value=\"\" disabled>No hay profesiones disponibles</option>";

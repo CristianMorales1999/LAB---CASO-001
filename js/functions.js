@@ -47,8 +47,8 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
         item["nombres"] = $("#nombre").val().trim().toUpperCase();
         item["apellido_paterno"] = $("#apellidoPaterno").val().trim().toUpperCase();
         item["apellido_materno"] = $("#apellidoMaterno").val().trim().toUpperCase();
-        item["cargo_id"] = $("#cargo").val();
-        item["profesion_id"] = $("#profesion").val();
+        item["cargo"] = $("#cargo").val();
+        item["profesion"] = $("#profesion").val();
 
         // Validación del campo nombre
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["nombres"])) {
@@ -65,11 +65,11 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
             mostrarTextoDeError("El apellido materno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellidoMaterno");
             esValido = false;
         }
-        if (item['cargo_id'] === "" || item['cargo_id'] === null) {
+        if (item['cargo'] === "" || item['cargo'] === null) {
             mostrarTextoDeError("Selecciona un cargo.", "cargo");
             esValido = false;
         }
-        if (item['profesion_id'] === "" || item['profesion_id'] === null) {
+        if (item['profesion'] === "" || item['profesion'] === null) {
             mostrarTextoDeError("Selecciona una profesión.", "profesion");
             esValido = false;
         }
@@ -126,9 +126,9 @@ function buscarItemPorCampo(tablaBD, tablaContenedor, mensajeContenedor) {
   let columna = $("#columna").val();
   let valor = $("#busqueda").val().trim();
   // Obtener el valor del campo de búsqueda específico
-  if (columna === "cargo_id" && $("#cargo").val() !== null) {
+  if (columna === "cargo" && $("#cargo").val() !== null) {
       valor = $("#cargo").val().trim();
-  } else if (columna === "profesion_id" && $("#profesion").val() !== null) {
+  } else if (columna === "profesion" && $("#profesion").val() !== null) {
       valor = $("#profesion").val().trim();
   }
   // Validar que los campos no estén vacíos
@@ -139,7 +139,6 @@ function buscarItemPorCampo(tablaBD, tablaContenedor, mensajeContenedor) {
       mostrarMensajeDeError("Por favor, completa todos los campos", mensajeContenedor);
       return;
   }
-  console.log("Campos de busqueda:", tablaBD,columna, valor);// Debugging: Verificar los valores de columna y valor
   // Limpiar tabla antes de la nueva búsqueda
   vaciarContenedor(tablaContenedor);
   // Realizar la petición AJAX
@@ -317,10 +316,10 @@ function inicializarBusquedaPorColumna() {
     busquedaProfesion.style.display = "none";
     busquedaInput.style.display = "block";
 
-    if (seleccion === "cargo_id") {
+    if (seleccion === "cargo") {
       busquedaCargo.style.display = "block";
       busquedaInput.style.display = "none";
-    } else if (seleccion === "profesion_id") {
+    } else if (seleccion === "profesion") {
       busquedaProfesion.style.display = "block";
       busquedaInput.style.display = "none";
     }

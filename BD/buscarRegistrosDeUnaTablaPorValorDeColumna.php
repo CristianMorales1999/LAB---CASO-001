@@ -8,6 +8,13 @@
     $valor = $_POST['valor']; // Valor a buscar
     $valor = '%' . $valor . '%'; // Agregar comodines para búsqueda parcial
 
+    // echo json_encode([
+    //         'status' => 'success',
+    //         'message' => 'Registros debuger.',
+    //         'tabla' => $tabla. ' - ' . $col . ' - ' . $valor
+    //     ]);
+    // exit();
+
     if(!isset($tabla) || !isset($col) || !isset($valor)) {
         echo json_encode([
             'status' => 'error',
@@ -19,6 +26,14 @@
     if ($tabla != 'empleados') {
         $consulta = "SELECT * FROM $tabla WHERE $col LIKE ? ORDER BY id ASC";
     } else {
+        $columnasPermitidas=[
+            'nombres'=> 'e.nombres',
+            'apellido_paterno'=> 'e.apellido_paterno',
+            'apellido_materno'=> 'e.apellido_materno',
+            'cargo'=> 'c.cargo',
+            'profesion'=> 'p.profesion'
+        ];
+
         // Si es la tabla empleados, se busca el valor en los campos específicos
         $consulta = "SELECT 
                         e.id, 
@@ -30,7 +45,7 @@
                     FROM empleados e 
                     INNER JOIN cargos c ON e.cargo_id = c.id 
                     INNER JOIN profesiones p ON e.profesion_id = p.id 
-                    WHERE e.$col LIKE ? 
+                    WHERE $columnasPermitidas[$col] LIKE ? 
                     ORDER BY e.id ASC";
     }
     // Preparar la consulta SQL
