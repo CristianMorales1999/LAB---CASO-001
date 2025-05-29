@@ -51,9 +51,9 @@
     listElements.forEach(element => {
       const link = element.querySelector('.menu__link')
       if (element === activeParent) {
-        link.style.backgroundColor = "#4A5568" // Fondo gris
+        link.style.backgroundColor = '#4A5568' // Fondo gris
       } else {
-        link.style.backgroundColor = ""
+        link.style.backgroundColor = ''
       }
     })
   }
@@ -62,9 +62,9 @@
     const allSubItems = document.querySelectorAll('.menu__link--inside')
     allSubItems.forEach(subItem => {
       if (subItem === activeChild) {
-        subItem.style.backgroundColor = "#718096" // Fondo más claro
+        subItem.style.backgroundColor = '#718096' // Fondo más claro
       } else {
-        subItem.style.backgroundColor = ""
+        subItem.style.backgroundColor = ''
       }
     })
   }
@@ -126,13 +126,17 @@
             : ''
 
           // Construye la URL
-           //const url = `views/${menuText}/${submenuText}.php`
-        const url = `views/${submenuText}.php`
-        
-          // Cargar el contenido usando la URL dinámica
-          cargarURL(url, 'container',true,{
-            tabla: menuText,
-          })
+          const url = `views/${menuText}/${submenuText}.php`
+          //const url = `views/${submenuText}.php`
+
+          // console.log(submenuText)
+          if (submenuText === 'consultar') {
+            cargarURL(url, 'container', true, { tabla: menuText }, function () {
+              inicializarBusquedaPorColumna() // Se ejecuta después de que el contenido se cargue
+            })
+          } else {
+            cargarURL(url, 'container', true, { tabla: menuText })
+          }
         })
       })
     })

@@ -6,7 +6,7 @@ function setActiveMenu(buttonId) {
     $(`#${buttonId}`).addClass("active");
 }
 
-function cargarURL(url,contenedor,efectoDeCarga=true, parametros={}) {   
+function cargarURL(url,contenedor,efectoDeCarga=true, parametros={}, callback=null) {   
   // Esperar n minilisegundos antes de mostrar el loader
   if(efectoDeCarga){
     mostrarLoader(300); 
@@ -19,6 +19,10 @@ function cargarURL(url,contenedor,efectoDeCarga=true, parametros={}) {
   }
   args.push(function(data){
     $(`#${contenedor}`).html(data);
+    // Ejecutar el callback si se proporciona y despues de cargar el contenido
+    if (typeof callback === "function") {
+      callback();
+    }
   });
 
   $.get(...args).fail(function() {
@@ -117,20 +121,30 @@ function insertarNuevoItem(tablaBD, nuevoItem, contenedor){
     });
 }
 
-function buscarItemPorCampo(tablaContenedor, mensajeContenedor) {
+function buscarItemPorCampo(tablaBD, tablaContenedor, mensajeContenedor) {
   // Obtener columna y valor a buscar
   let columna = $("#columna").val();
   let valor = $("#busqueda").val().trim();
+  // Obtener el valor del campo de búsqueda específico
+  if (columna === "cargo_id" && $("#cargo").val() !== null) {
+      valor = $("#cargo").val().trim();
+  } else if (columna === "profesion_id" && $("#profesion").val() !== null) {
+      valor = $("#profesion").val().trim();
+  }
+  // Validar que los campos no estén vacíos
   if (columna === "" || valor === "") {
+    console.log("Campos vacíos:", columna, valor);
     // Limpiar el contenedor de mensajes
       vaciarContenedor(tablaContenedor);
       mostrarMensajeDeError("Por favor, completa todos los campos", mensajeContenedor);
       return;
   }
+  console.log("Campos de busqueda:", tablaBD,columna, valor);// Debugging: Verificar los valores de columna y valor
   // Limpiar tabla antes de la nueva búsqueda
   vaciarContenedor(tablaContenedor);
   // Realizar la petición AJAX
-  $.post("BD/buscarbd.php", { 
+  $.post("BD/buscarRegistrosDeUnaTablaPorValorDeColumna.php", { 
+      'tabla': tablaBD,
       'columna':columna, 
       'valor':valor,
   }, function(response){
@@ -282,4 +296,74 @@ function mostrarLoader(milisegundos = 1000) {
 
 
 
+//Funcion para inicializar busqueda por columnas
+function inicializarBusquedaPorColumna() {
+  const vista = document.getElementById("vista-consultar");
+  if (!vista) return; // No estás en consultar.php, salimos
 
+  const columnaSelect = document.getElementById("columna");
+  const busquedaInput = document.getElementById("busqueda");
+  const busquedaCargo = document.getElementById("busqueda-cargo");
+  const busquedaProfesion = document.getElementById("busqueda-profesion");
+
+
+  if (!columnaSelect || !busquedaInput || !busquedaCargo || !busquedaProfesion) return;
+
+
+  function actualizarCampos() {
+    const seleccion = columnaSelect.value;
+
+    busquedaCargo.style.display = "none";
+    busquedaProfesion.style.display = "none";
+    busquedaInput.style.display = "block";
+
+    if (seleccion === "cargo_id") {
+      busquedaCargo.style.display = "block";
+      busquedaInput.style.display = "none";
+    } else if (seleccion === "profesion_id") {
+      busquedaProfesion.style.display = "block";
+      busquedaInput.style.display = "none";
+    }
+    // Limpiar los campos de búsqueda
+    busquedaInput.value = "";
+    if (busquedaCargo.querySelector("select")) {
+      busquedaCargo.querySelector("select").selectedIndex = 0;
+    }
+    if (busquedaProfesion.querySelector("select")) {
+      busquedaProfesion.querySelector("select").selectedIndex = 0;
+    }
+  }
+
+  columnaSelect.removeEventListener("change", actualizarCampos);
+  columnaSelect.addEventListener("change", actualizarCampos);
+  actualizarCampos();
+}
+
+// Función para cancelar la búsqueda y resetear el formulario
+function cancelarBusqueda() {
+  const columnaSelect = document.getElementById("columna");
+  const busquedaInput = document.getElementById("busqueda");
+  const busquedaCargo = document.getElementById("busqueda-cargo");
+  const busquedaProfesion = document.getElementById("busqueda-profesion");
+
+  // Restaurar valores por defecto
+  columnaSelect.selectedIndex = 0;
+  busquedaInput.value = "";
+  if (busquedaCargo.querySelector("select")) {
+    busquedaCargo.querySelector("select").selectedIndex = 0;
+  }
+  if (busquedaProfesion.querySelector("select")) {
+    busquedaProfesion.querySelector("select").selectedIndex = 0;
+  }
+
+  // Ocultar selects de cargo/profesión y mostrar campo de texto
+  busquedaCargo.style.display = "none";
+  busquedaProfesion.style.display = "none";
+  busquedaInput.style.display = "block";
+
+  // Limpiar resultados y mensajes
+  const tablaResultados = document.getElementById("tabla");
+  const mensaje = document.getElementById("mensaje");
+  if (tablaResultados) tablaResultados.innerHTML = "";
+  if (mensaje) mensaje.innerHTML = "";
+}
