@@ -1,5 +1,13 @@
 <div id="formulario-actualizar" class="container" style="display: none;">
-  <h2>Actualizar <?= $nombreTabla ?></h2>
+  <!-- Mostrar el nombre de la tabla en singular dependiendo del la terminacion de la tabla-->
+
+  <h2>Actualizar 
+    <?php if(substr($tabla, -2) === 'es'){
+      echo ucfirst(substr($tabla, 0, -2));
+    }else{
+      echo ucfirst(substr($tabla, 0, -1));
+    } ?>
+  </h2>
   <form class="form" id="formulario-actualizar">
     
     <!-- Campo ID oculto -->
@@ -17,7 +25,7 @@
         echo "<input type='text' id='apellido-materno' name='apellido-materno' placeholder='Tu apellido materno' required>";
 
         echo "<label>Cargo</label>";
-        echo "<select id='cargo' name='cargo' required>";
+        echo "<select id='cargo-actualizar' name='cargo' required>";
         echo "<option value='' disabled selected>Seleccionar...</option>";
 
         if ($cargos) {
@@ -30,7 +38,7 @@
         echo "</select>";
 
         echo "<label>Profesión</label>";
-        echo "<select id='profesion' name='profesion' required>";
+        echo "<select id='profesion-actualizar' name='profesion' required>";
         echo "<option value='' disabled selected>Seleccionar...</option>";
 
         if ($profesiones) {

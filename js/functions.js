@@ -194,8 +194,8 @@ function cargarFormularioActualizar(tablaBD,tableID, contenedorAOcultar="contain
           $("#apellido-paterno").val(data.registroEncontrado.apellido_paterno);
           $("#apellido-materno").val(data.registroEncontrado.apellido_materno);
           // Quiero seleccionar la opción del cargo y la profesión del registro encontrado en el select con id=cargo en la opción con el id=data.registroEncontrado.cargoId 
-          $("#cargo").selectedIndex = data.registroEncontrado.cargoId;
-          $("#profesion").selectedIndex = data.registroEncontrado.profesionId;
+          $("#cargo-actualizar").val(data.registroEncontrado.cargoId);
+          $("#profesion-actualizar").val(data.registroEncontrado.profesionId);
         }else{
           // Asignar el valor al resgistro encontrado de la columna(donde la columna es el nombre de la tabla en singular) determinada de la tabla al input de nombre
           //Verificar si la tabla termina en "es" o "s"
