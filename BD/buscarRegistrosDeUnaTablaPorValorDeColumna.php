@@ -1,130 +1,136 @@
 <?php
-    require_once 'conexion.php';
-    $conexion = conectarDB();
+require_once 'conexion.php';
+$conexion = conectarDB();
 
-    // Obtener el nombre de la tabla y el valor de la columna desde la solicitud POST
-    $tabla = $_POST['tabla']; // Nombre de la tabla
-    $col = $_POST['columna']; // Nombre de la columna
-    $valor = $_POST['valor']; // Valor a buscar
-    $valor = '%' . $valor . '%'; // Agregar comodines para búsqueda parcial
+$tabla = $_POST['tabla'] ?? null;
+$col = $_POST['columna'] ?? null;
+$valor = $_POST['valor'] ?? null;
 
-    // echo json_encode([
-    //         'status' => 'success',
-    //         'message' => 'Registros debuger.',
-    //         'tabla' => $tabla. ' - ' . $col . ' - ' . $valor
-    //     ]);
-    // exit();
+if (!$tabla || !$col || $valor === null) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Faltan parámetros necesarios.'
+    ]);
+    exit();
+}
 
-    if(!isset($tabla) || !isset($col) || !isset($valor)) {
+// Si el valor es un número y la columna es "id", no uses LIKE
+$esBusquedaPorID = ($col === 'id' && is_numeric($valor));
+$valorLike = '%' . $valor . '%'; // Para búsquedas parciales
+
+if ($tabla !== 'empleados') {
+    // Validar columnas permitidas para tablas generales (mejor con lista blanca)
+    $consulta = $esBusquedaPorID
+        ? "SELECT * FROM $tabla WHERE id = ? ORDER BY id ASC"
+        : "SELECT * FROM $tabla WHERE $col LIKE ? ORDER BY id ASC";
+} else {
+    $columnasPermitidas = [
+        'id' => 'e.id',
+        'nombres' => 'e.nombres',
+        'apellido_paterno' => 'e.apellido_paterno',
+        'apellido_materno' => 'e.apellido_materno',
+        'cargo' => 'c.cargo',
+        'profesion' => 'p.profesion'
+    ];
+
+    if (!array_key_exists($col, $columnasPermitidas)) {
         echo json_encode([
             'status' => 'error',
-            'message' => 'Faltan parámetros necesarios.'
+            'message' => 'Columna no permitida para búsqueda en empleados.'
         ]);
         exit();
     }
-    //Si no es la tabla empleados, se busca el valor en la columna especificada
-    if ($tabla != 'empleados') {
-        $consulta = "SELECT * FROM $tabla WHERE $col LIKE ? ORDER BY id ASC";
-    } else {
-        $columnasPermitidas=[
-            'nombres'=> 'e.nombres',
-            'apellido_paterno'=> 'e.apellido_paterno',
-            'apellido_materno'=> 'e.apellido_materno',
-            'cargo'=> 'c.cargo',
-            'profesion'=> 'p.profesion'
-        ];
 
-        // Si es la tabla empleados, se busca el valor en los campos específicos
-        $consulta = "SELECT 
-                        e.id, 
-                        e.nombres, 
-                        e.apellido_paterno, 
-                        e.apellido_materno, 
-                        c.cargo AS cargo, 
-                        p.profesion AS profesion 
-                    FROM empleados e 
-                    INNER JOIN cargos c ON e.cargo_id = c.id 
-                    INNER JOIN profesiones p ON e.profesion_id = p.id 
-                    WHERE $columnasPermitidas[$col] LIKE ? 
-                    ORDER BY e.id ASC";
-    }
-    // Preparar la consulta SQL
-    $stmt = $conexion->prepare($consulta);
-    // Verificar si la preparación de la consulta fue exitosa
-    if (!$stmt) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Error al preparar la consulta: ' . $conexion->error
-        ]);
-        exit();
-    }
-    $stmt->bind_param('s', $valor); // Vincular el parámetro
-    if (!$stmt->execute()) {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Error al ejecutar la consulta: ' . $stmt->error
-        ]);
-        exit();
-    }
-    $resultado = $stmt->get_result(); // Obtener el resultado de la consulta
+    $consulta = $esBusquedaPorID
+        ? "SELECT 
+                e.id, 
+                e.nombres, 
+                e.apellido_paterno, 
+                e.apellido_materno, 
+                c.cargo AS cargo, 
+                p.profesion AS profesion 
+            FROM empleados e 
+            INNER JOIN cargos c ON e.cargo_id = c.id 
+            INNER JOIN profesiones p ON e.profesion_id = p.id 
+            WHERE e.id = ? 
+            ORDER BY e.id ASC"
+        : "SELECT 
+                e.id, 
+                e.nombres, 
+                e.apellido_paterno, 
+                e.apellido_materno, 
+                c.cargo AS cargo, 
+                p.profesion AS profesion 
+            FROM empleados e 
+            INNER JOIN cargos c ON e.cargo_id = c.id 
+            INNER JOIN profesiones p ON e.profesion_id = p.id 
+            WHERE {$columnasPermitidas[$col]} LIKE ? 
+            ORDER BY e.id ASC";
+}
+
+$stmt = $conexion->prepare($consulta);
+if (!$stmt) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Error al preparar la consulta: ' . $conexion->error
+    ]);
+    exit();
+}
+
+$param = $esBusquedaPorID ? $valor : $valorLike;
+$stmt->bind_param('s', $param);
+
+if (!$stmt->execute()) {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Error al ejecutar la consulta: ' . $stmt->error
+    ]);
+    exit();
+}
+
+$resultado = $stmt->get_result();
+
+if ($resultado->num_rows > 0) {
+    $primerRegistro = $resultado->fetch_assoc();
+    $columnas = array_keys($primerRegistro);
     
-    //verificar si hay resultados
-    if ($resultado->num_rows > 0) {
-        $registros = array();
-        $primerRegistro = $resultado->fetch_assoc();
-        // Obtener los nombres de las columnas
-        $columnas = array_keys($primerRegistro);
-        
-        $tabla="<thead><tr>";
-
-        // Recorrer los nombres de las columnas y mostrarlas en la tabla
-        foreach ($columnas as $columna) {
-            $columna = str_replace('_', ' ', $columna);
-            $columna = preg_replace('/(?<!^)(?=[A-Z])/', ' ', $columna);
-            $columna = preg_replace('/\s+/', ' ', $columna);
-            $columna = trim($columna);
-            $columna = ucfirst(strtolower($columna));
-            // Mostrar el nombre de la columna
-            $tabla .= "<th>" . htmlspecialchars($columna) . "</th>";
-        }
-        $tabla.= "<th>Accion</th>"; // Agregar columna de acciones
-        $tabla .= "</tr></thead><tbody>";
-
-        // Agregar una fila para el primer registro
-        $tabla .= "<tr>";
-        // Recorrer cada columna del primer registro y agregarla a la tabla
-        foreach ($primerRegistro as $columna) {
-            //echo "<script>console.log(" . json_encode($columna) . ");</script>";
-            $tabla .= "<td>" . htmlspecialchars($columna) . "</td>";
-        }
-        // Agregar una celda para accion editar
-        $tabla .= "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar(" . json_encode($primerRegistro) . ",'container')\">Editar</button></td>";
-        $tabla .= "</tr>";
-
-        // Recorrer los registros y almacenarlos en el array
-        while ($fila = $resultado->fetch_assoc()) {
-
-            $tabla .= "<tr>";
-            // Recorrer cada columna de la fila y agregarla a la tabla
-            foreach ($fila as $columna) {
-                //echo "<script>console.log(" . json_encode($columna) . ");</script>";
-                $tabla .= "<td>" . htmlspecialchars($columna) . "</td>";
-            }
-            // Agregar una celda para accion editar
-            $tabla .= "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar(" . json_encode($fila) . ",'container')\">Editar</button></td>";
-
-            $tabla .= "</tr>";
-        }
-        $tabla .= "</tbody>";
-        echo json_encode([
-            'status' => 'success',
-            'message' => 'Registros encontrados.',
-            'tabla' => $tabla
-        ]);
-    } else {
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'No se encontraron registros para el valor proporcionado.'
-        ]);
+    $tablaHTML = "<thead><tr>";
+    foreach ($columnas as $columna) {
+        $columnaMostrar = ucfirst(strtolower(str_replace('_', ' ', $columna)));
+        $tablaHTML .= "<th>" . htmlspecialchars($columnaMostrar) . "</th>";
     }
+    $tablaHTML .= "<th>Acción</th></tr></thead><tbody>";
+
+    // Agregar el primer registro como la primera fila de la tabla
+    // con el botón de acción para editar
+    $tablaHTML .= "<tr>";
+    foreach ($primerRegistro as $dato) {
+        $tablaHTML .= "<td>" . htmlspecialchars($dato) . "</td>";
+    }
+    $tablaHTML .= "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar('" . $tabla . "','".$primerRegistro['id'] . "','vista-consultar')\">Editar</button></td></tr>";
+
+    // Agregar el resto de los registros
+    while ($fila = $resultado->fetch_assoc()) {
+        $tablaHTML .= "<tr>";
+        foreach ($fila as $dato) {
+            $tablaHTML .= "<td>" . htmlspecialchars($dato) . "</td>";
+        }
+        // Agregar botón de acción para cada fila pasando como parámetro el nombre de la tabla y el ID del registro
+        $tablaHTML .= "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar('" . $tabla . "','" . $fila['id'] . "','vista-consultar')\">Editar</button></td>";
+        $tablaHTML .= "</tr>";
+    }
+
+    $tablaHTML .= "</tbody>";
+
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Registros encontrados.',
+        'tabla' => $tablaHTML
+    ]);
+} else {
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'No se encontraron registros para el valor proporcionado.'
+    ]);
+}
 ?>

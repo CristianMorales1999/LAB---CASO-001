@@ -125,12 +125,16 @@ function buscarItemPorCampo(tablaBD, tablaContenedor, mensajeContenedor) {
   // Obtener columna y valor a buscar
   let columna = $("#columna").val();
   let valor = $("#busqueda").val().trim();
-  // Obtener el valor del campo de búsqueda específico
-  if (columna === "cargo" && $("#cargo").val() !== null) {
-      valor = $("#cargo").val().trim();
-  } else if (columna === "profesion" && $("#profesion").val() !== null) {
-      valor = $("#profesion").val().trim();
+
+  if(tablaBD === "empleados"){
+    // Obtener el valor del campo de búsqueda específico
+    if (columna === "cargo" && $("#cargo").val() !== null) {
+        valor = $("#cargo").val().trim();
+    } else if (columna === "profesion" && $("#profesion").val() !== null) {
+        valor = $("#profesion").val().trim();
+    }
   }
+
   // Validar que los campos no estén vacíos
   if (columna === "" || valor === "") {
     console.log("Campos vacíos:", columna, valor);
@@ -168,27 +172,46 @@ function buscarItemPorCampo(tablaBD, tablaContenedor, mensajeContenedor) {
   });
 }
 
-function cargarFormularioActualizar(contactoId, contenedorAOcultar="container", contenedorAMostrar="formulario-actualizar") {
+function cargarFormularioActualizar(tablaBD,tableID, contenedorAOcultar="container", contenedorAMostrar="formulario-actualizar") {
   // Ocultar la tabla y mostrar el formulario
   $("#"+contenedorAOcultar).hide();
   $("#"+contenedorAMostrar).show();
 
-  // Cargar los datos del contacto
-  $.post("BD/buscarPorIdBD.php", { 'id': contactoId }, function(response){
+  // Cargar los datos del registro
+  $.post("BD/buscarRegistroDeUnaTablaPorId.php", { 
+      'tabla': tablaBD,
+      'id':tableID,
+  }, function(response){
       let data = JSON.parse(response);
       if (data.status === 'success') {
-          $("#contacto-id").val(data.contacto.id);
-          $("#nombre").val(data.contacto.nombre);
-          $("#correo").val(data.contacto.email);
-          $("#telefono").val(data.contacto.telefono);
-          $("#servicio").val(data.contacto.servicio);
-          $("#consulta").val(data.contacto.consulta);
+        // Mostrar el registro encontrado para ver en que formato viene
+        //console.log(data.registroEncontrado);
+
+        // Obtener los datos del registro dependiendo de la tabla
+        if(tablaBD=="empleados"){
+          // Obtener los datos del registro de empleados
+          $("#nombre").val(data.registroEncontrado.nombres);
+          $("#apellido-paterno").val(data.registroEncontrado.apellido_paterno);
+          $("#apellido-materno").val(data.registroEncontrado.apellido_materno);
+          // Quiero seleccionar la opción del cargo y la profesión del registro encontrado en el select con id=cargo en la opción con el id=data.registroEncontrado.cargoId 
+          $("#cargo").selectedIndex = data.registroEncontrado.cargoId;
+          $("#profesion").selectedIndex = data.registroEncontrado.profesionId;
+        }else{
+          // Asignar el valor al resgistro encontrado de la columna(donde la columna es el nombre de la tabla en singular) determinada de la tabla al input de nombre
+          //Verificar si la tabla termina en "es" o "s"
+          if(tablaBD.endsWith("es")){
+            $("#nombre").val(data.registroEncontrado[tablaBD.slice(0,-2)]);
+          }else{
+            $("#nombre").val(data.registroEncontrado[tablaBD.slice(0,-1)]);
+          }
+        }
+
       } else {
-          alert("Error al cargar el contacto.");
+          alert("Error al cargar el registro.");
           cancelarEdicion(contenedorAMostrar,contenedorAOcultar);
       }
   }).fail(function() {
-      alert("Error al cargar el contacto.");
+      alert("Error al cargar el registro.");
       cancelarEdicion(contenedorAMostrar,contenedorAOcultar);
   });
 }
@@ -340,24 +363,28 @@ function inicializarBusquedaPorColumna() {
 
 // Función para cancelar la búsqueda y resetear el formulario
 function cancelarBusqueda() {
-  const columnaSelect = document.getElementById("columna");
-  const busquedaInput = document.getElementById("busqueda");
-  const busquedaCargo = document.getElementById("busqueda-cargo");
-  const busquedaProfesion = document.getElementById("busqueda-profesion");
+  const columnaSelect = document.getElementById("columna");//ID de selector de columna de búsqueda
+  const busquedaInput = document.getElementById("busqueda");//ID de input de búsqueda
+  const busquedaCargo = document.getElementById("busqueda-cargo");// ID de contenedor de búsqueda de cargo(Aplica solo para empleados)
+  const busquedaProfesion = document.getElementById("busqueda-profesion");// ID de contenedor de búsqueda de profesión(Aplica solo para empleados)
 
   // Restaurar valores por defecto
   columnaSelect.selectedIndex = 0;
   busquedaInput.value = "";
-  if (busquedaCargo.querySelector("select")) {
-    busquedaCargo.querySelector("select").selectedIndex = 0;
-  }
-  if (busquedaProfesion.querySelector("select")) {
-    busquedaProfesion.querySelector("select").selectedIndex = 0;
-  }
 
-  // Ocultar selects de cargo/profesión y mostrar campo de texto
-  busquedaCargo.style.display = "none";
-  busquedaProfesion.style.display = "none";
+  //Verifica que los contenedores de búsqueda de cargo y profesión existan
+  if(busquedaCargo && busquedaProfesion) {
+    // Limpiar selects de cargo/profesión    
+    if (busquedaCargo.querySelector("select")) {
+      busquedaCargo.querySelector("select").selectedIndex = 0;
+    }
+    if (busquedaProfesion.querySelector("select")) {
+      busquedaProfesion.querySelector("select").selectedIndex = 0;
+    }
+    // Ocultar selects de cargo/profesión y mostrar campo de texto
+    busquedaCargo.style.display = "none";
+    busquedaProfesion.style.display = "none";
+}
   busquedaInput.style.display = "block";
 
   // Limpiar resultados y mensajes

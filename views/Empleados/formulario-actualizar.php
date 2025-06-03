@@ -1,8 +1,11 @@
 <div id="formulario-actualizar" class="container" style="display: none;">
-  <h2>Actualizar Contacto</h2>
+  <h2>Actualizar <?= $nombreTabla ?></h2>
   <form class="form" id="formulario-actualizar">
+    
+    <!-- Campo ID oculto -->
     <input type="hidden" id="empleado-id">
 
+    <!--Campos editables de tabla empleados-->
     <label>Nombre</label>
     <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
 
@@ -12,6 +15,7 @@
     <label>Apellido Materno</label>
     <input type="text" id="apellido-materno" name="apellido-materno" placeholder="Tu apellido materno" required>
 
+    <!-- Cargo -->
     <label>Cargo</label>
     <select id="cargo" name="cargo" required>
       <option value="" disabled selected>Seleccionar...</option>
@@ -25,7 +29,8 @@
       }
       ?>
     </select>
-
+    
+    <!-- Profesión -->
     <label>Profesión</label>
     <select id="profesion" name="profesion" required>
       <option value="" disabled selected>Seleccionar...</option>
@@ -39,11 +44,13 @@
       }
       ?>
     </select>
-
+    
+    <!-- Botones de acción -->
     <div class="form-buttons">
       <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?= $urlDeRetorno ?>','update')">Actualizar</button>
 
       <button type="button" class="btn cancel" onclick="cancelarEdicion('formulario-actualizar','container')">Cancelar</button>
     </div>
+
   </form>
 </div>

@@ -126,8 +126,8 @@
             : ''
 
           // Construye la URL
-          const url = `views/${menuText}/${submenuText}.php`
-          //const url = `views/${submenuText}.php`
+          //const url = `views/${menuText}/${submenuText}.php`
+          const url = `views/${submenuText}.php`
 
           // console.log(submenuText)
           if (submenuText === 'consultar') {
