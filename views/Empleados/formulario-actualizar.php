@@ -10,10 +10,10 @@
     <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required>
 
     <label>Apellido Paterno</label>
-    <input type="text" id="apellido-paterno" name="apellido-paterno" placeholder="Tu apellido paterno" required>
+    <input type="text" id="apellidoPaterno" name="apellidoPaterno" placeholder="Tu apellido paterno" required>
 
     <label>Apellido Materno</label>
-    <input type="text" id="apellido-materno" name="apellido-materno" placeholder="Tu apellido materno" required>
+    <input type="text" id="apellidoMaterno" name="apellidoMaterno" placeholder="Tu apellido materno" required>
 
     <!-- Cargo -->
     <label>Cargo</label>

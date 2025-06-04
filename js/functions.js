@@ -47,8 +47,8 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
         item["nombres"] = $("#nombre").val().trim().toUpperCase();
         item["apellido_paterno"] = $("#apellidoPaterno").val().trim().toUpperCase();
         item["apellido_materno"] = $("#apellidoMaterno").val().trim().toUpperCase();
-        item["cargo"] = $("#cargo").val();
-        item["profesion"] = $("#profesion").val();
+        item["cargo_id"] = $("#cargo-actualizar").val();//Guarda el cargo_id
+        item["profesion_id"] = $("#profesion-actualizar").val();//guarda el profesion_id
 
         // Validación del campo nombre
         if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item["nombres"])) {
@@ -65,28 +65,28 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
             mostrarTextoDeError("El apellido materno debe contener solo letras y tener entre 3 y 100 caracteres.", "apellidoMaterno");
             esValido = false;
         }
-        if (item['cargo'] === "" || item['cargo'] === null) {
-            mostrarTextoDeError("Selecciona un cargo.", "cargo");
+        if (item['cargo_id'] === "" || item['cargo_id'] === null) {
+            mostrarTextoDeError("Selecciona un cargo.", "cargo-actualizar");
             esValido = false;
         }
-        if (item['profesion'] === "" || item['profesion'] === null) {
-            mostrarTextoDeError("Selecciona una profesión.", "profesion");
+        if (item['profesion_id'] === "" || item['profesion_id'] === null) {
+            mostrarTextoDeError("Selecciona una profesión.", "profesion-actualizar");
             esValido = false;
         }
     }
     else if(tablaBD=="cargos"){
         item['cargo'] = $("#cargo").val().toUpperCase();
         // Validación del campo cargo
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item['cargo'])) {
-            mostrarTextoDeError("El cargo debe contener solo letras y tener entre 3 y 100 caracteres.", "cargo");
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\-]{3,100}$/.test(item['cargo'])) {
+             mostrarTextoDeError("El cargo debe contener solo letras, espacios o guiones medios y tener entre 3 y 100 caracteres.", "cargo");
             esValido = false;
         }
     }
     else if(tablaBD=="profesiones"){
         item['profesion'] = $("#profesion").val().toUpperCase();
         // Validación del campo profesion
-        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]{3,100}$/.test(item['profesion'])) {
-            mostrarTextoDeError("La profesión debe contener solo letras y tener entre 3 y 100 caracteres.", "profesion");
+        if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s\-]{3,100}$/.test(item['profesion'])) {
+            mostrarTextoDeError("La profesión debe contener solo letras, espacios o guiones medios y tener entre 3 y 100 caracteres.", "profesion");
             esValido = false;
         }
     }
@@ -97,7 +97,8 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
         insertarNuevoItem(tablaBD,item,contenedorOrUrlDeRetorno);
       }
       else if(accion=="update"){
-        actualizarContacto(contenedorOrUrlDeRetorno);//Url de retorno
+        item["id"] = $("#table-id").val();
+        actualizarItem(tablaBD,item,contenedorOrUrlDeRetorno);//Url de retorno
       }
     }
 }
@@ -183,16 +184,16 @@ function cargarFormularioActualizar(tablaBD,tableID, contenedorAOcultar="contain
       'id':tableID,
   }, function(response){
       let data = JSON.parse(response);
+
       if (data.status === 'success') {
-        // Mostrar el registro encontrado para ver en que formato viene
-        //console.log(data.registroEncontrado);
+        $("#table-id").val(data.registroEncontrado.id);
 
         // Obtener los datos del registro dependiendo de la tabla
         if(tablaBD=="empleados"){
           // Obtener los datos del registro de empleados
           $("#nombre").val(data.registroEncontrado.nombres);
-          $("#apellido-paterno").val(data.registroEncontrado.apellido_paterno);
-          $("#apellido-materno").val(data.registroEncontrado.apellido_materno);
+          $("#apellidoPaterno").val(data.registroEncontrado.apellido_paterno);
+          $("#apellidoMaterno").val(data.registroEncontrado.apellido_materno);
           // Quiero seleccionar la opción del cargo y la profesión del registro encontrado en el select con id=cargo en la opción con el id=data.registroEncontrado.cargoId 
           $("#cargo-actualizar").val(data.registroEncontrado.cargoId);
           $("#profesion-actualizar").val(data.registroEncontrado.profesionId);
@@ -200,12 +201,11 @@ function cargarFormularioActualizar(tablaBD,tableID, contenedorAOcultar="contain
           // Asignar el valor al resgistro encontrado de la columna(donde la columna es el nombre de la tabla en singular) determinada de la tabla al input de nombre
           //Verificar si la tabla termina en "es" o "s"
           if(tablaBD.endsWith("es")){
-            $("#nombre").val(data.registroEncontrado[tablaBD.slice(0,-2)]);
+            $("#"+tablaBD.slice(0,-2)).val(data.registroEncontrado[tablaBD.slice(0,-2)]);
           }else{
-            $("#nombre").val(data.registroEncontrado[tablaBD.slice(0,-1)]);
+            $("#"+tablaBD.slice(0,-1)).val(data.registroEncontrado[tablaBD.slice(0,-1)]);
           }
         }
-
       } else {
           alert("Error al cargar el registro.");
           cancelarEdicion(contenedorAMostrar,contenedorAOcultar);
@@ -215,33 +215,17 @@ function cargarFormularioActualizar(tablaBD,tableID, contenedorAOcultar="contain
       cancelarEdicion(contenedorAMostrar,contenedorAOcultar);
   });
 }
-function cancelarEdicion(contenedorAOcultar="formulario-actualizar", contenedorAMostrar="actualizar-container") {
+function cancelarEdicion(contenedorAOcultar="formulario-actualizar", contenedorAMostrar="vista-consultar") {
   // Ocultar el formulario y mostrar la tabla
   $("#"+contenedorAOcultar).hide();
   $("#"+contenedorAMostrar).show();
 }
 
-function actualizarContacto(urlDeRetorno="actualizar.php") {
-  let id = $("#contacto-id").val();
-  let nombre = $("#nombre").val().trim();
-  let email = $("#correo").val().trim();
-  let telefono = $("#telefono").val().trim();
-  let servicio = $("#servicio").val();
-  let consulta = $("#consulta").val().trim();
+function actualizarItem(tablaBD, item,urlDeRetorno="actualizar.php") {
 
-
-  if (nombre === "" || email === "" || telefono === "" || servicio === "" || consulta === "") {
-      alert("Por favor, completa todos los campos.");
-      return;
-  }
-
-  $.post("BD/actualizarPorIdBD.php", {
-      'id': id,
-      'nombre': nombre,
-      'email': email,
-      'telefono': telefono,
-      'servicio': servicio,
-      'consulta': consulta
+  $.post("BD/actualizarRegistroDeUnaTablaPorId.php", {
+      'tabla':tablaBD,
+      'item': item,
   }, function(response){
       let data = JSON.parse(response);
       if (data.status === 'success') {
@@ -249,7 +233,7 @@ function actualizarContacto(urlDeRetorno="actualizar.php") {
       } else {
           mostrarMensajeDeError(data.message,'formulario-actualizar');
       }
-      setTimeout(function(){ cargarURL(urlDeRetorno,'menu-details',false);}, 2000);
+      setTimeout(function(){ cargarURL(urlDeRetorno,'container',false,{tabla:tablaBD});}, 2000);
   }).fail(function() {
       alert("Error al actualizar el contacto.");
   });

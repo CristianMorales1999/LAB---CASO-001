@@ -1,6 +1,7 @@
 <?php
     // Incluir el archivo de conexión a la base de datos 
     require_once '../BD/obtenerRegistrosDeUnaTabla.php';
+    require_once '../helpers.php';
 
     $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL
 
@@ -8,16 +9,7 @@
         $cargos = obtenerTodosLosRegistrosDeUnaTabla('cargos');
         $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
     }
-
-    $nombreTabla = $tabla;
-    // Convertir el nombre de la tabla a singular
-    if (substr($nombreTabla, -2) == 'es') {
-        $nombreTabla = substr($nombreTabla, 0, -2);
-    }else if (substr($nombreTabla, -1) == 's') {
-        $nombreTabla = substr($nombreTabla, 0, -1);
-    }
-    // Capitalizar la primera letra del nombre de la tabla
-    $nombreTabla = ucfirst(strtolower($nombreTabla));
+    $nombreTabla=convertirASingularCapitalizado($tabla);
 ?>
 
 <div id="contenedor" class="container">
@@ -35,7 +27,7 @@
                 echo "<input type=\"text\" id=\"apellidoMaterno\" name=\"apellidoMaterno\" placeholder=\"Tu apellido materno\" required>";
                 //Label para el cargo
                 echo "<label>Cargo</label>";
-                echo "<select id=\"cargo\" name=\"cargo\" required>";
+                echo "<select id=\"cargo-actualizar\" name=\"cargo\" required>";
                 if ($cargos) {
                     echo "<option value=\"\" disabled selected>Seleccionar...</option>";
                     foreach ($cargos as $cargo) {
@@ -47,7 +39,7 @@
                 echo "</select>";
                 //Label para la profesion
                 echo "<label>Profesión</label>";
-                echo "<select id=\"profesion\" name=\"profesion\" required>";
+                echo "<select id=\"profesion-actualizar\" name=\"profesion\" required>";
                 if ($profesiones) {
                     echo "<option value=\"\" disabled selected>Seleccionar...</option>";
                     foreach ($profesiones as $profesion) {
@@ -64,7 +56,7 @@
             }
         ?>
         <div class="form-buttons">
-            <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?php echo $tabla ?>','container');">Enviar</button>
+            <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?php echo $tabla ?>','container');">Enviar</button><!--Manda el contenedor del index.php-->
             <button type="reset" class="btn cancel">Cancelar</button>
         </div>
     </form>

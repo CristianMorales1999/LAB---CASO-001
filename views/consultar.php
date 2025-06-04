@@ -6,8 +6,10 @@ $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL
 
 $nombreTabla = ucfirst(strtolower($tabla)); // Convertir el nombre de la tabla a mayúsculas y minúsculas
 
-$cargos = obtenerTodosLosRegistrosDeUnaTabla('cargos');
-$profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
+if($tabla=="empleados"){
+    $cargos = obtenerTodosLosRegistrosDeUnaTabla('cargos');
+    $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
+}
 ?>
 
 <div id="vista-consultar" class="container">
@@ -100,7 +102,7 @@ $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
 
 <?php
 //Variable de archivo padre de donde fué llamado
-$urlDeRetorno = "listar.php";
+$urlDeRetorno = "views/listar.php";
 //Incluir archivo de formularioActualizar.php
 require_once "formulario-actualizar.php";
 ?>
