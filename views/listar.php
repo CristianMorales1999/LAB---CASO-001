@@ -3,6 +3,17 @@
   require_once '../BD/obtenerRegistrosDeUnaTabla.php';
 
   $tabla = $_GET['tabla']; // Obtener el nombre de la tabla desde la URL
+
+  $accion = $_GET['accion'] ?? null; //Si se manda parámetro de accion "Eliminar" o "Actualizar"
+  if($accion){
+    $accion = ($accion && $accion=="actualizar") ? "Editar" : ucfirst($accion);
+    if($tabla=="empleados"){
+        $cargos = obtenerTodosLosRegistrosDeUnaTabla('cargos');
+        $profesiones = obtenerTodosLosRegistrosDeUnaTabla('profesiones');
+    }
+  }
+  
+
   //Llamar la función para obtener todos los registros de la tabla Empleados
   $resultado = obtenerTodosLosRegistrosDeUnaTabla($tabla);
 ?>
@@ -15,6 +26,7 @@
         <?php
             // Obtener los nombres de las columnas
             $columnas = array_keys($resultado[0]);
+            $nColumnas=0;
             // Recorrer los nombres de las columnas y mostrarlas en la tabla
             foreach ($columnas as $columna) {
                 $columna = str_replace('_', ' ', $columna);
@@ -24,6 +36,11 @@
                 $columna = ucfirst(strtolower($columna));
                 // Mostrar el nombre de la columna
                 echo "<th>" . $columna . "</th>";
+                $nColumnas++;
+            }
+            if($accion){//Mostrar el nombre de la columna de acción si la hubiera
+                echo "<th>Acción</th>";
+                $nColumnas++;
             }
         ?>
       </tr>
@@ -38,13 +55,26 @@
           foreach ($row as $columna) {
             echo "<td>" . htmlspecialchars($columna) . "</td>";
           }
+          if($accion){//Si hay una accion que se muestre
+            echo "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar('" . $tabla . "','" . $row['id'] . "','listado')\">".$accion."</button></td>";
+          }
           echo "</tr>";
         }
       } else {
         // No hay registros
-        echo "<tr><td colspan='" . count($columnas) . "'>No hay registros disponibles</td></tr>";
+        echo "<tr><td colspan='" . $nColumnas . "'>No hay registros disponibles</td></tr>";
       }
       ?>
     </tbody>
   </table>
 </div>
+
+<?php
+if($accion){
+  //Variable de archivo padre de donde fué llamado
+  $urlDeRetorno = "views/listar.php";
+  $idContenedorAMostar="listado";
+  //Incluir archivo de formularioActualizar.php
+  require_once "formulario-actualizar.php";
+}
+?>

@@ -34,7 +34,7 @@ function cargarURL(url,contenedor,efectoDeCarga=true, parametros={}, callback=nu
   });
 }
 
-function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="insert") {
+function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion=null) {
     // Limpiar mensajes previos
     limpiarMensajesDeError();
     
@@ -96,9 +96,9 @@ function validarFormularioYRegistrar(tablaBD, contenedorOrUrlDeRetorno, accion="
       if(accion=="insert"){
         insertarNuevoItem(tablaBD,item,contenedorOrUrlDeRetorno);
       }
-      else if(accion=="update"){
+      else{
         item["id"] = $("#table-id").val();
-        actualizarItem(tablaBD,item,contenedorOrUrlDeRetorno);//Url de retorno
+        actualizarItem(tablaBD,item,contenedorOrUrlDeRetorno,accion);//Url de retorno
       }
     }
 }
@@ -221,7 +221,7 @@ function cancelarEdicion(contenedorAOcultar="formulario-actualizar", contenedorA
   $("#"+contenedorAMostrar).show();
 }
 
-function actualizarItem(tablaBD, item,urlDeRetorno="actualizar.php") {
+function actualizarItem(tablaBD, item,urlDeRetorno="actualizar.php", action=null) {
 
   $.post("BD/actualizarRegistroDeUnaTablaPorId.php", {
       'tabla':tablaBD,
@@ -233,7 +233,10 @@ function actualizarItem(tablaBD, item,urlDeRetorno="actualizar.php") {
       } else {
           mostrarMensajeDeError(data.message,'formulario-actualizar');
       }
-      setTimeout(function(){ cargarURL(urlDeRetorno,'container',false,{tabla:tablaBD});}, 2000);
+      setTimeout(function(){ cargarURL(urlDeRetorno,'container',false,{
+        tabla:tablaBD,
+        accion : action
+      });}, 2000);
   }).fail(function() {
       alert("Error al actualizar el contacto.");
   });

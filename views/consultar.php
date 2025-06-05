@@ -103,6 +103,8 @@ if($tabla=="empleados"){
 <?php
 //Variable de archivo padre de donde fué llamado
 $urlDeRetorno = "views/listar.php";
+$idContenedorAMostar="vista-consultar";
+$accion=null;
 //Incluir archivo de formularioActualizar.php
 require_once "formulario-actualizar.php";
 ?>

@@ -56,7 +56,7 @@
             }
         ?>
         <div class="form-buttons">
-            <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?php echo $tabla ?>','container');">Enviar</button><!--Manda el contenedor del index.php-->
+            <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?php echo $tabla ?>','container','insert');">Enviar</button><!--Manda el contenedor del index.php-->
             <button type="reset" class="btn cancel">Cancelar</button>
         </div>
     </form>

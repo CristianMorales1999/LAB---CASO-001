@@ -57,9 +57,9 @@
 
     <!-- Botones de acción -->
     <div class="form-buttons">
-      <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?= $tabla ?>','<?= $urlDeRetorno ?>','update')">Actualizar</button>
+      <button type="button" class="btn" onclick="validarFormularioYRegistrar('<?= $tabla ?>','<?= $urlDeRetorno ?>','<?= $accion ?>')">Actualizar</button>
 
-      <button type="button" class="btn cancel" onclick="cancelarEdicion('formulario-actualizar','vista-consultar')">Cancelar</button>
+      <button type="button" class="btn cancel" onclick="cancelarEdicion('formulario-actualizar','<?= $idContenedorAMostar ?>')">Cancelar</button>
     </div>
 
   </form>

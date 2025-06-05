@@ -134,7 +134,12 @@
             cargarURL(url, 'container', true, { tabla: menuText }, function () {
               inicializarBusquedaPorColumna() // Se ejecuta después de que el contenido se cargue
             })
-          } else {
+          } else if(submenuText=='actualizar' || submenuText=='eliminar'){//Si desea hacer la accion de actualizar o eliminar
+            cargarURL('views/listar.php', 'container', true,{ 
+              tabla: menuText,
+              accion: submenuText,
+            })
+          }else {
             cargarURL(url, 'container', true, { tabla: menuText })
           }
         })
