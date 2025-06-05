@@ -242,13 +242,14 @@ function actualizarItem(tablaBD, item,urlDeRetorno="actualizar.php", action=null
   });
 }
 
-function eliminarItemPorId(id, urlDeRetorno="eliminar.php"){
+function eliminarItemPorId(tablaBD, id, urlDeRetorno="eliminar.php", action=null){
   // Validar que el ID sea mayor a cero y que el usuario confirme la eliminación
-  if (id <= 0 || !confirm("¿Estás seguro de que deseas eliminar este contacto?")) {
+  if (id <= 0 || !confirm("¿Estás seguro de que deseas eliminar este registro?")) {
       return;
   }
   mostrarLoader(300); 
-  $.post("BD/eliminarPorIdBD.php", {
+  $.post("BD/eliminarRegistroDeUnaTablaPorId.php", {
+      'tabla':tablaBD,
       'id': id,
   }, function(response){
       let data = JSON.parse(response);
@@ -257,7 +258,13 @@ function eliminarItemPorId(id, urlDeRetorno="eliminar.php"){
       } else {
           mostrarMensajeDeError(data.message,'container');
       }
-      setTimeout(function(){ mostrarLoader(300); cargarURL(urlDeRetorno,'menu-details',false);}, 2000);
+      setTimeout(function(){
+        mostrarLoader(300); 
+        cargarURL(urlDeRetorno,'container',false,{
+          tabla:tablaBD,
+          accion : action
+        });
+      }, 2000);
   }).fail(function() {
       alert("Error al eliminar el contacto.");
   });

@@ -56,7 +56,11 @@
             echo "<td>" . htmlspecialchars($columna) . "</td>";
           }
           if($accion){//Si hay una accion que se muestre
-            echo "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar('" . $tabla . "','" . $row['id'] . "','listado')\">".$accion."</button></td>";
+            if($accion!="Eliminar"){
+              echo "<td><button class='btn actualizar-btn' onclick=\"cargarFormularioActualizar('" . $tabla . "','" . $row['id'] . "','listado')\">".$accion."</button></td>";
+            }else{
+              echo "<td><button type='button' class='btn delete' onclick=\"eliminarItemPorId('". $tabla ."','". $row['id'] . "','views/listar.php','".$accion."')\">🗑️Borrar</button></td>";
+            }
           }
           echo "</tr>";
         }
