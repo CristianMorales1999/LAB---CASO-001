@@ -138,7 +138,6 @@ function buscarItemPorCampo(tablaBD, tablaContenedor, mensajeContenedor) {
 
   // Validar que los campos no estén vacíos
   if (columna === "" || valor === "") {
-    console.log("Campos vacíos:", columna, valor);
     // Limpiar el contenedor de mensajes
       vaciarContenedor(tablaContenedor);
       mostrarMensajeDeError("Por favor, completa todos los campos", mensajeContenedor);

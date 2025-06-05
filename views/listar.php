@@ -16,6 +16,7 @@
 
   //Llamar la función para obtener todos los registros de la tabla Empleados
   $resultado = obtenerTodosLosRegistrosDeUnaTabla($tabla);
+  $nColumnas=2;
 ?>
 
 <div id="listado" class="container">
@@ -24,6 +25,7 @@
     <thead>
       <tr>
         <?php
+          if ($resultado && is_array($resultado) && count($resultado) > 0) {
             // Obtener los nombres de las columnas
             $columnas = array_keys($resultado[0]);
             $nColumnas=0;
@@ -42,6 +44,7 @@
                 echo "<th>Acción</th>";
                 $nColumnas++;
             }
+          }
         ?>
       </tr>
     </thead>

@@ -126,7 +126,6 @@
             : ''
 
           // Construye la URL
-          //const url = `views/${menuText}/${submenuText}.php`
           const url = `views/${submenuText}.php`
 
           // console.log(submenuText)
@@ -139,8 +138,13 @@
               tabla: menuText,
               accion: submenuText,
             })
-          }else {
+          }else if(submenuText=="listar" || submenuText=="registrar"){//Solo listar tal cual
             cargarURL(url, 'container', true, { tabla: menuText })
+          }
+          else{//Consultas
+            const coincidencia = submenuText.match(/\d+/);
+            const consulta = parseInt(coincidencia[0], 10);
+            cargarURL("views/consultas.php", 'container', true, { nroDeConsulta: consulta })
           }
         })
       })
